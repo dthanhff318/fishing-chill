@@ -1,23 +1,34 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
+import { useEffect, useState } from "react";
 import "./App.css";
-import Home from "./scenes/home";
+import { Application, Assets, Sprite, Container } from "pixi.js";
+import { drawFunctionButton } from "./scenes/main/button";
+import { loaderAsset } from "./pixiUtils/loader";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  let pixiApp;
+  async function initPixi() {
+    pixiApp = new Application();
+    await pixiApp.init({ background: "#383c3d", resizeTo: window });
+    document.body.appendChild(pixiApp?.canvas);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
+    const mainScene = new Container();
+    const texture = await Assets.load("https://pixijs.com/assets/bunny.png");
+    const bunny = new Sprite(texture);
+    bunny.anchor.set(0.5);
+    bunny.x = pixiApp.screen.width / 2;
+    bunny.y = pixiApp.screen.height / 2;
+
+    // const resource = await loaderAsset();
+
+    pixiApp.stage.addChild(mainScene);
+
+    drawFunctionButton(mainScene);
   }
 
-  return (
-    <main className="container">
-      <Home />
-    </main>
-  );
+  useEffect(() => {
+    initPixi();
+  }, []);
+  return <main className="container"></main>;
 }
 
 export default App;
