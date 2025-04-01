@@ -2,27 +2,33 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { Application, Assets, Sprite, Container } from "pixi.js";
 import { drawFunctionButton } from "./scenes/main/button";
-import { loaderAsset } from "./pixiUtils/loader";
 
 function App() {
   let pixiApp;
   async function initPixi() {
     pixiApp = new Application();
-    await pixiApp.init({ background: "#383c3d", resizeTo: window });
-    document.body.appendChild(pixiApp?.canvas);
+    await pixiApp.init({
+      width: 441,
+      height: 787,
+      resolution: window.devicePixelRatio || 1,
+    });
+
+    document.body.appendChild(
+      pixiApp?.renderer.view.canvas as unknown as HTMLCanvasElement
+    );
 
     const mainScene = new Container();
-    const texture = await Assets.load("https://pixijs.com/assets/bunny.png");
-    const bunny = new Sprite(texture);
-    bunny.anchor.set(0.5);
-    bunny.x = pixiApp.screen.width / 2;
-    bunny.y = pixiApp.screen.height / 2;
+    const backgroundTexture = await Assets.load("/background-main.png");
+    const backgroundSprite = new Sprite(backgroundTexture);
+    backgroundSprite.width = pixiApp.screen.width;
+    backgroundSprite.height = pixiApp.screen.height;
 
-    // const resource = await loaderAsset();
-
+    // Optionally, center the background sprite
+    backgroundSprite.anchor.set(0, 0); // Set anchor to the center of the sprite
+    mainScene.addChild(backgroundSprite);
     pixiApp.stage.addChild(mainScene);
 
-    drawFunctionButton(mainScene);
+    drawFunctionButton(mainScene, pixiApp);
   }
 
   useEffect(() => {
