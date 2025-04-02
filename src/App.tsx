@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "./App.css";
-import { Application } from "pixi.js";
+import { Application, Assets } from "pixi.js";
 import { drawFunctionButton } from "./scenes/main/button";
 import createMainScene from "./scenes/main/mainScene";
 import createInfoUser from "./pixiUtils/infoUser";
@@ -14,6 +14,10 @@ function App() {
       height: 787,
       resolution: window.devicePixelRatio || 1,
     });
+    const a = await Assets.load(
+      "/font/pixelFont/PixelifySans-VariableFont_wght.ttf"
+    );
+    console.log(a);
 
     const root = document.querySelector("#root");
     if (!root) return;
