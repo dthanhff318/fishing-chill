@@ -1,42 +1,7 @@
 import { Text, Graphics } from "pixi.js";
 import { createPopup } from "../../components/modal";
+import { updateInfoUser } from "../../pixiUtils/infoUser";
 export const drawFunctionButton = (scene: any, app: any) => {
-  const userInfoPanel = new Graphics();
-  userInfoPanel.beginFill(0x8a6b4f);
-  userInfoPanel.drawRect(0, 0, 200, 100);
-  userInfoPanel.endFill();
-  scene.addChild(userInfoPanel);
-
-  const userNameText = new Text({
-    text: "Lv36 Gusionn",
-    style: {
-      fontSize: 24,
-      fill: 0xffffff,
-      align: "center",
-    },
-  });
-  userNameText.x = 20;
-  userNameText.y = 20;
-  scene.addChild(userNameText);
-
-  const userExpText = new Text("Exp 203.014K/204.2K", {
-    fontSize: 18,
-    fill: 0xffffff,
-    align: "center",
-  });
-  userExpText.x = 20;
-  userExpText.y = 50;
-  scene.addChild(userExpText);
-
-  const userCoinsText = new Text("Coins: 906", {
-    fontSize: 18,
-    fill: 0xffffff,
-    align: "center",
-  });
-  userCoinsText.x = 20;
-  userCoinsText.y = 80;
-  scene.addChild(userCoinsText);
-
   // BUTTON MENU
 
   const createButton = (text, x, y) => {
@@ -95,7 +60,7 @@ export const drawFunctionButton = (scene: any, app: any) => {
   // Add Play button action
   playButton.on("pointerdown", () => {
     console.log("Play button clicked");
-    showModal();
+    updateInfoUser({ name: "DTHanh" });
   });
 
   scene.addChild(playButton);

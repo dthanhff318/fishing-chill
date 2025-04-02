@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
-import { Application, Assets, Sprite, Container } from "pixi.js";
+import { Application } from "pixi.js";
 import { drawFunctionButton } from "./scenes/main/button";
+import createMainScene from "./scenes/main/mainScene";
+import createInfoUser from "./pixiUtils/infoUser";
 
 function App() {
   let pixiApp;
@@ -13,19 +15,16 @@ function App() {
       resolution: window.devicePixelRatio || 1,
     });
 
-    document.body.appendChild(
+    const root = document.querySelector("#root");
+    if (!root) return;
+    root.appendChild(
       pixiApp?.renderer.view.canvas as unknown as HTMLCanvasElement
     );
 
-    const mainScene = new Container();
-    const backgroundTexture = await Assets.load("/background-main.png");
-    const backgroundSprite = new Sprite(backgroundTexture);
-    backgroundSprite.width = pixiApp.screen.width;
-    backgroundSprite.height = pixiApp.screen.height;
+    const userInfoPanel = await createInfoUser(pixiApp);
+    const mainScene = await createMainScene(pixiApp);
 
-    // Optionally, center the background sprite
-    backgroundSprite.anchor.set(0, 0); // Set anchor to the center of the sprite
-    mainScene.addChild(backgroundSprite);
+    pixiApp.stage.addChild(userInfoPanel);
     pixiApp.stage.addChild(mainScene);
 
     drawFunctionButton(mainScene, pixiApp);
