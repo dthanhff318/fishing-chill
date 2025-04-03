@@ -1,52 +1,68 @@
 import { useEffect, useRef } from "react";
 import { StyledPlayer } from "./Player.style";
 
+const PULL_BAR_HEIGHT = 200;
+const PULL_BAR_WIDTH = 30;
+const PULL_BAR_BORDER_WIDTH = 10;
+
+const FISH_BAR_HEIGHT = 70;
+const USER_BAR_HEIGHT = 20;
+
 const Player = () => {
   const canvasRef = useRef(null);
-  const fishTopRef = useRef(60); // Vị trí của cá (catch-fish)
-  const userPositionRef = useRef(0); // Vị trí của người chơi (catch-user)
-  const isUpRef = useRef(false); // Cờ để di chuyển lên
-  const canvasWidth = 100;
-  const canvasHeight = 200;
+  const fishPositionRef = useRef(0);
+  const userPositionRef = useRef(0);
+  const isUpRef = useRef(false);
   const timeoutUserRef = useRef<number | null>(null);
-  const timeoutFishRef = useRef<number | null>(null);
+  const directionFishBarRef = useRef<string>("up");
 
   // Tạo tốc độ di chuyển
-  const userSpeed = 1.5; // Tốc độ di chuyển cho user (catch-user)
-  const fishSpeed = 0.5; // Tốc độ di chuyển chậm hơn cho fish (catch-fish)
+  const userSpeed = 1.1;
+  const fishSpeed = 1;
 
   // Hàm vẽ trên canvas
   const drawCanvas = (ctx) => {
     ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillRect(0, 0, PULL_BAR_WIDTH, PULL_BAR_HEIGHT);
 
+    ctx.lineWidth = PULL_BAR_BORDER_WIDTH;
+    ctx.strokeStyle = "#873e23";
+    ctx.strokeRect(0, 0, PULL_BAR_WIDTH, PULL_BAR_HEIGHT);
     // Fish area
     ctx.fillStyle = "blue";
-    ctx.fillRect(0, fishTopRef.current, canvasWidth, 90);
+    ctx.fillRect(
+      0 + PULL_BAR_BORDER_WIDTH / 2,
+      fishPositionRef.current,
+      PULL_BAR_WIDTH - PULL_BAR_BORDER_WIDTH,
+      FISH_BAR_HEIGHT
+    );
 
     // User area
     ctx.fillStyle = "yellow";
-    ctx.fillRect(0, userPositionRef.current, canvasWidth, 40);
+    ctx.fillRect(
+      0 + PULL_BAR_BORDER_WIDTH / 2,
+      userPositionRef.current,
+      PULL_BAR_WIDTH - PULL_BAR_BORDER_WIDTH,
+      USER_BAR_HEIGHT
+    );
   };
 
   const updateCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    // Move random
-    if (!timeoutFishRef.current) {
-      const randomMove = Math.floor(Math.random() * 61) - 10;
-      fishTopRef.current += randomMove * fishSpeed;
-      const duration = Math.abs(randomMove) * 200;
-      timeoutFishRef.current = setTimeout(() => {
-        timeoutFishRef.current = null;
-      }, duration);
+    if (fishPositionRef.current >= PULL_BAR_HEIGHT - FISH_BAR_HEIGHT) {
+      directionFishBarRef.current = "up";
+    } else if (fishPositionRef.current === 0) {
+      directionFishBarRef.current = "down";
     }
-
+    fishPositionRef.current =
+      fishPositionRef.current +
+      (directionFishBarRef.current === "up" ? -fishSpeed : fishSpeed);
     // Auto failing
     if (!isUpRef.current) {
-      if (userPositionRef.current < 160) {
-        userPositionRef.current += userSpeed;
+      if (userPositionRef.current < PULL_BAR_HEIGHT - USER_BAR_HEIGHT) {
+        userPositionRef.current += userSpeed * 1.5;
       }
     } else {
       userPositionRef.current -= userSpeed;
@@ -55,17 +71,16 @@ const Player = () => {
       }
     }
 
-    // Vẽ lại canvas mỗi lần thay đổi
     drawCanvas(ctx);
-
-    // Tiếp tục gọi updateCanvas để tiếp tục animation
     requestAnimationFrame(updateCanvas);
   };
 
   useEffect(() => {
-    // Bắt đầu animation khi component mount
-    requestAnimationFrame(updateCanvas);
-  }, []); // Không có dependencies, chỉ chạy một lần khi component mount
+    const animationId = requestAnimationFrame(updateCanvas);
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
+  }, []);
 
   const handleCatch = () => {
     if (timeoutUserRef.current) {
@@ -81,8 +96,8 @@ const Player = () => {
     <StyledPlayer>
       <canvas
         ref={canvasRef}
-        width={canvasWidth}
-        height={canvasHeight}
+        width={PULL_BAR_WIDTH}
+        height={PULL_BAR_HEIGHT}
       ></canvas>
       <button onClick={handleCatch}>Catch</button>
     </StyledPlayer>

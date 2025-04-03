@@ -4,9 +4,8 @@ import { StyledLoadingScene } from "./LoadingScene.style";
 const LoadingScene = () => {
   return (
     <StyledLoadingScene>
-      <img className="logo-img" src="/fish-icon.jpg" alt="" />
+      {/* <img className="logo-img" src="/fish-icon.jpg" alt="" /> */}
       <p className="game-title">Fishing chill</p>
-      <Player />
     </StyledLoadingScene>
   );
 };
