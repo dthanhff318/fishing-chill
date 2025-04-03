@@ -5,7 +5,7 @@
   "identifier": "com.fishing-chill.app",
   "build": {
     "beforeDevCommand": "pnpm dev",
-    "devUrl": "http://localhost:1420",
+    "devUrl": "http://localhost:5182",
     "beforeBuildCommand": "pnpm build",
     "frontendDist": "../dist"
   },
@@ -14,7 +14,7 @@
       {
         "title": "Fishing chill",
         "width": 700,
-        "height": 900,
+        "height": 750,
         "resizable": false
       }
     ],

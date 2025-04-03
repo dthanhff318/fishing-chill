@@ -1,43 +1,15 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
-import { Application, Assets } from "pixi.js";
-import { drawFunctionButton } from "./scenes/main/button";
-import createMainScene from "./scenes/main/mainScene";
-import createInfoUser from "./pixiUtils/infoUser";
+import MainScene from "./scenes/main";
+import LoadingScene from "./scenes/loading";
 
 function App() {
-  let pixiApp;
-  async function initPixi() {
-    pixiApp = new Application();
-    await pixiApp.init({
-      width: 441,
-      height: 787,
-      resolution: window.devicePixelRatio || 1,
-    });
-    const a = await Assets.load(
-      "/font/pixelFont/PixelifySans-VariableFont_wght.ttf"
-    );
-    console.log(a);
-
-    const root = document.querySelector("#root");
-    if (!root) return;
-    root.appendChild(
-      pixiApp?.renderer.view.canvas as unknown as HTMLCanvasElement
-    );
-
-    const userInfoPanel = await createInfoUser(pixiApp);
-    const mainScene = await createMainScene(pixiApp);
-
-    pixiApp.stage.addChild(userInfoPanel);
-    pixiApp.stage.addChild(mainScene);
-
-    drawFunctionButton(mainScene, pixiApp);
-  }
-
-  useEffect(() => {
-    initPixi();
-  }, []);
-  return <main className="container"></main>;
+  const [loading, setLoading] = useState(true);
+  return (
+    <main className="container">
+      {loading ? <LoadingScene /> : <MainScene />}
+    </main>
+  );
 }
 
 export default App;
