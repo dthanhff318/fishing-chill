@@ -1,4 +1,5 @@
 import Player from "../../components/player.tsx";
+import useAssets from "../../store/useAssets.ts";
 import { StyledLoadingScene } from "./LoadingScene.style";
 
 const LoadingScene = () => {
