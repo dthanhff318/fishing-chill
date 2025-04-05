@@ -8,7 +8,7 @@ export const StyledLoadingScene = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-image: url("/bg-loading.gif");
+  background-image: url("/assets/main/loading-bg.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
