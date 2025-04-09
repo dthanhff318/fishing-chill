@@ -9,4 +9,5 @@ export const assetsConfig = [
 
   // Common
   { name: "common-user-panel", src: "/assets/common/userPanel.png" },
+  { name: "common-level-panel", src: "/assets/common/levelBg.png" },
 ];

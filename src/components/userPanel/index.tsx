@@ -8,64 +8,46 @@ const UserPanel = () => {
   const canvasEl = useRef<HTMLCanvasElement>(null);
   const { assets } = useAssets();
 
-  //   const drawCanvas = (ctx) => {
-  //     if (!canvasRef.current) return;
-
-  //     const imgWidth = 770;
-  //     const imgHeight = 290;
-
-  //     ctx.clearRect(0, 0, 800, 300);
-  //     ctx.drawImage(
-  //       getAssetByName("common-user-panel", assets),
-  //       0,
-  //       0,
-  //       imgWidth,
-  //       imgHeight,
-  //       0,
-  //       0,
-  //       360,
-  //       50
-  //     );
-  //   };
-
-  //   const updateCanvas = () => {
-  //     const canvas = canvasRef.current as unknown as HTMLCanvasElement;
-  //     const ctx = canvas.getContext("2d");
-
-  //     drawCanvas(ctx);
-  //     requestAnimationFrame(updateCanvas);
-  //   };
-
-  //   useEffect(() => {
-  //     const animationId = requestAnimationFrame(updateCanvas);
-  //     return () => {
-  //       cancelAnimationFrame(animationId);
-  //     };
-  //   }, []);
   const updateCanvasContext = async (canvas: any) => {
     if (!canvas) return;
-    const text = new fabric.FabricText("Hello, Fabric.js!", {
-      left: 100, // Vị trí X của văn bản
-      top: 100, // Vị trí Y của văn bản
-      fontSize: 38, // Kích thước font
-      fontFamily: "Pixelify Sans", // Kiểu chữ
-      fill: "blue", // Màu chữ
+
+    const text = new fabric.FabricText("t1zz", {
+      left: 114,
+      top: 24,
+      fontSize: 18,
+      fontWeight: 600,
+      fontFamily: "Pixelify Sans",
+      fill: "green",
     });
 
-    const imgElement = document.getElementById("myImage") as HTMLImageElement;
+    const userPanelImg = document.getElementById(
+      "userPanel"
+    ) as HTMLImageElement;
 
-    // Tạo đối tượng fabric.Image từ phần tử img
-    const img = new fabric.FabricImage(imgElement, {
+    const levelBgImg = document.getElementById("levelBg") as HTMLImageElement;
+
+    const userPanel = new fabric.FabricImage(userPanelImg, {
+      left: 10,
+      top: 16,
+      angle: 0,
+    });
+    const levelBg = new fabric.FabricImage(levelBgImg, {
+      left: -12,
+      top: 84,
+      angle: 0,
+    });
+
+    const userPanelGroup = new fabric.Group([userPanel, levelBg], {
       left: 0,
       top: 0,
       angle: 0,
     });
 
-    canvas.add(img);
+    userPanel.scaleToHeight(100);
+    levelBg.scaleToHeight(40);
 
-    // Thêm văn bản vào canvas
     canvas.add(text);
-    // canvas.add(image);
+    canvas.add(userPanelGroup);
     canvas.renderAll();
   };
 
@@ -82,10 +64,15 @@ const UserPanel = () => {
     };
   }, []);
   return (
-    <StyledUserPanel width={800} height={300} ref={canvasEl}>
+    <StyledUserPanel width={700} height={750} ref={canvasEl}>
       <img
-        id="myImage"
+        id="userPanel"
         src="/assets/common/userPanel.png"
+        style={{ display: "none" }}
+      />
+      <img
+        id="levelBg"
+        src="/assets/common/levelBg.png"
         style={{ display: "none" }}
       />
     </StyledUserPanel>
